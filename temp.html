@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+    var VINCLU = {};
+    VINCLU.ChickenLuncher = function() {
+        return {
+            SocketManager : function(wsurl) {
+                var callback = null;
+                var self = this;
+                var _url = wsurl;
+                this.socket;
+
+                this.onOpen = function() {
+                    console.log('open');
+                    VINCLU.ChickenLuncher.apiManager.login();
+                };
+                this.onClose = function() {
+                    console.log('Close');
+                    self.connect();
+                };
+                this.onError = function() {
+                    console.log('error');
+                };
+                this.onMessage = function(event) {
+                    var json = JSON.parse(event.data);
+                    callback( json );
+                };
+                this.send = function(json) {
+                    this.socket.send(json);
+                };
+                this.connect = function() {
+                    self.socket = new WebSocket(_url);
+                    self.socket.onerror = self.onError;
+                    self.socket.onopen = self.onOpen;
+                    self.socket.onmessage = self.onMessage;
+                    self.socket.onclose =  self.onClose;
+                }
+                this.init = function(func) {
+                    self.connect();
+                    callback = func;
+                }
+            },
+            ApiManager : function(ajaxurl) {
+                var self = this;
+                this.loginid = null;
+                this.user = null;
+                this._url = ajaxurl;
+                this.login = function() {
+                    $.ajax({
+                        type: "POST",
+                        url: self._url + '/api/login',
+                        dataType : 'json',
+                        data : VINCLU.ChickenLuncher.loginUser
+                    })
+                    .done(function(data) {
+                        self.loginid = data;
+                        console.log('login success '+ self.loginid);
+                    })
+                    .fail(function(e) {
+                        // debug
+                        console.log('login fail');
+                    })
+                    .always(function() {
+                        if(self.loginid) {
+                            VINCLU.ChickenLuncher.socketManager.send(JSON.stringify({
+                                    cmd : 'connect',
+                                    id : self.loginid
+                                })
+                            );
+                        }
+                       console.log( "complete" );
+                    });
+                },
+                this.offer = function(enemyid) {
+                    var senddata = JSON.stringify({
+                        id : self.loginid,
+                        enemy : enemyid
+                    });
+                    console.log(senddata);
+                    $.ajax({
+                        type: "POST",
+                        url: self._url + '/api/game/offer',
+                        dataType : 'text',
+                        data : senddata
+                    })
+                    .done(function(data) {
+                        self.loginid = data;
+                    })
+                    .fail(function(e) {
+                       console.log( e );
+                       console.log( "offer　fail" );
+                    })
+                    .always(function() {
+                       console.log( "offer　complete" );
+                    });
+                },
+                // 決闘申し込み受け取り
+                this.offered = function (data) {
+
+                }
+            }
+        };
+    }();
+
+    VINCLU.ChickenLuncher.loginUser = {
+        service:'twitter',
+        service_id:'3333',
+        name:'鳥二郎',
+        icon:'http://viclue.com/hero.gif'
+    };
+
+    var processManager = function(data) {
+        console.log(data);
+    }
+
+
+    VINCLU.ChickenLuncher.apiManager = new VINCLU.ChickenLuncher.ApiManager('http://chicken-launcher.herokuapp.com');
+    VINCLU.ChickenLuncher.socketManager = new VINCLU.ChickenLuncher.SocketManager('ws://chicken-launcher.herokuapp.com');
+    VINCLU.ChickenLuncher.socketManager.init(processManager);
+
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

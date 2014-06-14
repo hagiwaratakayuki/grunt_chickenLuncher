@@ -1,0 +1,91 @@
+
+// n is number of stars required
+@function multiple-box-shadow ($n,$r,$blur) 
+  $value: '#{random(2000)}px #{random(2000)}px #{random($blur)}px #{random($r)}px rgba(#{random(10)+245},#{random(10)+245},#{random(10)+245},0.7)'
+  @for $i from 2 through $n
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px #{random($blur)}px #{random($r)}px rgba(#{random(10)+245},#{random(10)+245},#{random(10)+245},0.7)'
+
+  @return unquote($value)
+
+$shadows-small:  multiple-box-shadow(400,1,10)
+$shadows-medium: multiple-box-shadow(150,2,40)
+$shadows-big:    multiple-box-shadow(100,2,100)
+
+html
+  height: 100%
+  overflow: hidden
+  background: #0b0841
+  background: -moz-linear-gradient(top, #0b0841 0%, #000016 100%)
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0b0841), color-stop(100%,#000016))
+  background: -webkit-linear-gradient(top, #0b0841 0%,#000016 100%)
+  background: -o-linear-gradient(top, #0b0841 0%,#000016 100%)
+  background: -ms-linear-gradient(top, #0b0841 0%,#000016 100%)
+  background: linear-gradient(to bottom, #0b0841 0%,#000016 100%)
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0b0841', endColorstr='#000016',GradientType=0 )
+
+#stars
+  width: 1px
+  height: 1px
+  background: transparent
+  box-shadow: $shadows-small
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 1px
+    height: 1px
+    background: transparent
+    box-shadow: $shadows-small
+
+#stars2
+  width: 2px
+  height: 2px
+  background: transparent
+  box-shadow: $shadows-medium
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 2px
+    height: 2px
+    background: transparent
+    box-shadow: $shadows-medium
+
+#stars3
+  width: 3px
+  height: 3px
+  background: transparent
+  box-shadow: $shadows-big
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 3px
+    height: 3px
+    background: transparent
+    box-shadow: $shadows-big
+
+#title
+  position: absolute
+  top: 50%
+  left: 0
+  right: 0
+
+  color: #FFF
+  text-align: center
+  font-family: 'lato',sans-serif
+  font-weight: 300
+  font-size: 50px
+  letter-spacing: 10px
+
+  margin-top: -60px
+  padding-left: 10px
+
+  span
+    background: -webkit-linear-gradient(white, #38495a)
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+    var VINCLU = {};
+    VINCLU.ChickenLuncher = function() {
+        const ws_url = 'ws://chicken-launcher.herokuapp.com';
+        const http_url = 'http://chicken-launcher.herokuapp.com';
+        return {
+            SocketManager : function() {
+                return new function(){
+                    var callback = null;
+                    var self = this;
+                    this.socket = null;
+                    this.onOpen = function() {
+                        console.log('open');
+                        VINCLU.ChickenLuncher.ApiManager.login();
+                    };
+                    this.onClose = function() {
+                        console.log('Close');
+                        self.connect();
+                    };
+                    this.onError = function() {
+                        console.log('error');
+                    };
+                    this.onMessage = function(event) {
+                        var json = JSON.parse(event.data);
+                        VINCLU.ChickenLuncher.ProcessManager.receiver( json );
+                    };
+                    this.send = function(json) {
+                        this.socket.send(JSON.stringify(json));
+                    };
+                    this.connect = function() {
+                        self.socket = new WebSocket(ws_url);
+                        self.socket.onerror = self.onError;
+                        self.socket.onopen = self.onOpen;
+                        self.socket.onmessage = self.onMessage;
+                        self.socket.onclose =  self.onClose;
+                    }
+                    this.init = function(func) {
+                        self.connect();
+                    }
+                }();
+            }(),
+            ApiManager : function() {
+                return new function(){
+                    var self = this;
+                    this.loginid = null;
+                    this.user = null;
+                    this.login = function() {
+                        $.ajax({
+                            type: "POST",
+                            url: http_url + '/api/login',
+                            dataType : 'json',
+                            data : VINCLU.ChickenLuncher.loginUser
+                        })
+                        .done(function(data) {
+                            self.loginid = data;
+                            console.log('login success '+ self.loginid);
+                        })
+                        .fail(function(e) {
+                            // debug
+                            console.log('login fail');
+                        })
+                        .always(function() {
+                            if(self.loginid) {
+                                VINCLU.ChickenLuncher.SocketManager.send({
+                                    cmd : "connect",
+                                    id : self.loginid
+                                });
+                            }
+                           console.log( "complete" );
+                        });
+                    }
+                    this.offer = function(enemyid) {
+                        console.log( enemyid+"に申し込んだ" );
+                        var senddata = JSON.stringify({
+                            id : self.loginid,
+                            enemy : enemyid
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: http_url + '/api/game/offer',
+                            dataType : 'text',
+                            data : senddata
+                        })
+                        .done(function(data) {
+                           console.log( "offer success" );
+                        })
+                        .fail(function(e) {
+                           console.log( "offer　fail" );
+                        })
+                        .always(function() {
+                           console.log( "offer　complete" );
+                        });
+                    }
+                    // 決闘申し込み取り下げ
+                    this.offerCancel = function () {
+                        console.log( "offerCancel" );
+                        VINCLU.ChickenLuncher.SocketManager.send({
+                            'cmd' : 'offer_cancel',
+                            'id' : self.loginid
+                        });
+                    }
+                    this.accept = function () {
+                        console.log( "accept" );
+                        VINCLU.ChickenLuncher.SocketManager.send({
+                            'cmd' : 'accept'
+                        });
+                    }
+                }()
+            }(),
+            ProcessManager : function () {
+                var _pm =  new function(){
+                    this.list = function(){
+                        console.log('リストを受け取った');
+                    };
+                    this.offered = function(){
+                        console.log('決闘が申し込まれた');
+                        if(true) {
+
+                        }
+                    }
+                }();
+                return new function(){
+                    this.receiver = function(data) {
+                        console.log(data);
+                        if(_pm[data.cmd]) {
+                            _pm[data.cmd]();
+                        }
+                        $('#debugger').prepend('<p>'+JSON.stringify(data)+'</p>');
+                    }
+                }();
+            }(),
+            ActionManager : function () {
+                this.setBind = function(){
+
+                }
+            }
+        }
+    }();
+
+    </script>
+</head>
+<body>
+<p>login</p>
+id:<input type="text" id="debugId" >
+<input type="button" id="debugLogin" value="test">
+
+<p>offer</p>
+id:<input type="text" id="debugOfferId" >
+<input type="button" id="debugOffer" value="debugOffer">
+<input type="button" id="debugOfferCancel" value="debugOfferCancel">
+
+<p>accept</p>
+<input type="button" id="accept" value="accept">
+
+
+<div id="debugger"></div>
+
+<script type="text/javascript">
+    document.getElementById('debugLogin').onclick = function(e){
+
+        VINCLU.ChickenLuncher.loginUser = {
+            service:'twitter',
+            service_id:document.getElementById('debugId').value,
+            name:'鳥二郎',
+            icon:'http://viclue.com/hero.gif'
+        };
+
+        VINCLU.ChickenLuncher.SocketManager.init();
+    };
+
+    document.getElementById('debugOffer').onclick = function(e){
+        VINCLU.ChickenLuncher.ApiManager.offer(document.getElementById('debugOfferId').value);
+    };
+    document.getElementById('debugOfferCancel').onclick = function(e){
+        VINCLU.ChickenLuncher.ApiManager.offerCancel();
+    };
+    document.getElementById('accept').onclick = function(e){
+        VINCLU.ChickenLuncher.ApiManager.accept();
+    };
+</script>
+</body>
+</html>

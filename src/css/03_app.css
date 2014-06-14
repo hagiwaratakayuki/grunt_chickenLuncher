@@ -1,0 +1,253 @@
+
+.scene {
+    width : 100%;
+    height : 100%;
+    position : fixed;
+    top: 0;
+}
+.scene_cutin {
+  display : none;
+  background-size : cover;
+  background-image : url('../img/chicken_fire_bg.png');
+}
+.scene_duel {
+    display : none;
+    background-image:url('../img/chicken_bg_bokeh.png');
+    background-size : cover;
+}
+
+.beep_chicken {
+    display : none;
+}
+
+.countdown {
+    display : none;
+    margin : 0 auto;
+    max-width: 80%;
+}
+
+.duel_background {
+  height : 100%;
+  position: relative;
+  text-align : center;
+}
+
+.layer_gun {
+  position : absolute;
+  top : 0;
+  left : 0;
+  height : 100%;
+  width : 100%;
+  background-image:url('../img/chicken_play_gun.png');
+  background-repeat: no-repeat;
+  background-size : contain;
+  margin : 0;
+  padding: 0;
+}
+
+.ready_message {
+  left : 130px!important;
+  max-width: 70%;
+}
+.ready_arrow {
+  left : 10px!important;
+  max-width: 27%;
+}
+
+
+
+.cutin_message_wrapper {
+  position : absolute;
+  height: 100%;
+  width: 100%;
+  overflow : none;
+}
+
+.cutin_character_left {
+    position : fixed;
+    left : 3%;
+    height : 100%;
+    width : 24.64788%;
+    background-size : cover;
+    background-image : url('../img/chicken_cutin_left.png');
+}
+.cutin_character_right {
+    position : fixed;
+    right : 3%;
+    height : 100%;
+    width : 24.64788%;
+    background-size : cover;
+    background-image : url('../img/chicken_cutin_right.png');
+}
+
+.player1_wrapper,
+.player2_wrapper{
+    width: 72%;
+    height : 42.1875%;
+    position : fixed;
+    color : #FEFEFE;
+}
+
+.player1_wrapper {
+    top : 0;
+    right : 0;
+}
+
+.player2_wrapper {
+    bottom : 0;
+    left : 0;
+}
+
+.player1_wrapper_inner {
+    position : absolute;
+    text-align : left;
+    left : 5%;
+    top : 10%;
+}
+
+.player1_record {
+    font-size : 1.5em;
+    position : absolute;
+    text-align : left;
+    left : 5%;
+    bottom : 10%;
+}
+
+.player2_wrapper_inner {
+    position : absolute;
+    text-align : right;
+    right : 5%;
+    top : 10%;
+}
+
+.player2_record {
+    font-size : 1.5em;
+    position : absolute;
+    text-align : right;
+    right : 5%;
+    bottom : 10%;
+}
+
+.cutin_message_vs {
+    position : absolute;
+    height : 18.4375%;
+    width : 15.757042%;
+    background-size : cover;
+    background-image : url('../img/chicken_cutin_vs.png');
+}
+
+.player_title {
+    font-size : 3em;
+}
+.player_name {
+    font-size : 3.7em;
+}
+
+.result {
+    display : none;
+}
+
+
+/* scene cross */
+
+.scene_cross {
+  display : none;
+  background-size : cover;
+  background-image : url('../img/chicken_cross_bg.png');
+}
+
+.cross_player1_wrapper,
+.cross_player2_wrapper {
+    width: 100%;
+    height : 100%;
+    position : fixed;
+}
+
+.cross_player1_wrapper {
+    top : 0;
+    right : 0;
+}
+
+.cross_player2_wrapper {
+    top : 0;
+    left : 0;
+}
+
+.cross_player1_burret,
+.cross_player2_burret {
+    width: 12.94%;
+    height : 100%;
+    position : fixed;
+    background-size : cover;
+    color : #FEFEFE;
+    background-repeat : no-repeat;
+}
+
+
+.cross_player1_burret {
+    right : 0;
+    background-image : url('../img/chiken_cross_1p_bullet.png');
+}
+
+.cross_player2_burret {
+    left : 0;
+    background-image : url('../img/chiken_cross_2p_bullet.png');
+}
+
+
+
+/* scene cross */
+
+.scene_cross {
+  display : none;
+  background-size : cover;
+  background-image : url('../img/chicken_cross_bg.png');
+}
+
+.cross_player1_wrapper,
+.cross_player2_wrapper {
+    width: 100%;
+    height : 100%;
+    position : fixed;
+}
+
+.cross_player1_wrapper {
+    top : 0;
+    right : 0;
+}
+
+.cross_player2_wrapper {
+    top : 0;
+    left : 0;
+}
+
+.scene_result {
+    width : 100%
+    height : 100%;
+  display : none;
+  background-color : #666;
+}
+.result_win {
+    width : 100%
+    height : 100%;
+  background-size : cover;
+  background-image : url('../img/chicken_appicon.png');
+}
+
+.scene_result {
+  width : 100%;
+  height : 100%;
+  display : none;
+  background-color : #666;
+}
+.result_win {
+  width : 100%;
+  height : 100%;
+  background-size : cover;
+  background-image : url('../img/chicken_appicon.png');
+}
+
+.result img{
+    margin-top : 5%;
+    width: 100%;
+}
